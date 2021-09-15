@@ -3,24 +3,45 @@
 set -e
 set -o pipefail
 
-echo "Setting up Trusted NPM registry."
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+echo 'Setting up private NPM registries.' | indent
 
 readonly BUILD_DIR=$1
-readonly CLEAN_FILES=.slug-post-clean
 
 if [[ ! -n "${BUILD_DIR}" ]]; then
-  echo "No build directory specified - exiting"
+  echo "Failed! No build directory specified." | indent
   exit 1
 fi
 
 cd ${BUILD_DIR}
 
-echo 'npmScopes:' >> ~/.yarnrc.yml
-echo '  trusted:' >> ~/.yarnrc.yml
-echo '    npmAuthToken: "${GITHUB_NPM_TOKEN}"' >> ~/.yarnrc.yml
-echo '    npmRegistryServer: "https://npm.pkg.github.com"' >> ~/.yarnrc.yml
-echo '  fortawesome:' >> ~/.yarnrc.yml
-echo '    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"' >> ~/.yarnrc.yml
-echo '    npmRegistryServer: "https://npm.fontawesome.com/"' >> ~/.yarnrc.yml
+# Assert existence of config vars.
+if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
+  echo "Failed! Variable \$GITHUB_NPM_TOKEN not set." | indent
+  exit 1
+fi
 
+if [[ -z "$FONTAWESOME_NPM_TOKEN" ]]; then
+  echo "Failed! Variable \$FONTAWESOME_NPM_TOKEN not set." | indent
+  exit 1
+fi
+
+cat >> .yarnrc.yml << EOL
+npmScopes:
+  trusted:
+    npmAuthToken: "${GITHUB_NPM_TOKEN}"
+    npmRegistryServer: "https://npm.pkg.github.com"
+  fortawesome:
+    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"
+    npmRegistryServer: "https://npm.fontawesome.com/"
+EOL
+
+echo "Done!" | indent
 exit 0
