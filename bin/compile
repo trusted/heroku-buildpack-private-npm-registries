@@ -15,25 +15,12 @@ fi
 
 cd ${BUILD_DIR}
 
-if [[ "$NODE_ENV" == "production" || -n "$CIRCLE_CI"  ]] ; then
-  if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
-    echo "Variable \$GITHUB_NPM_TOKEN not set. Aborting."
-    exit 1
-  fi
+echo 'npmScopes:' >> ~/.yarnrc.yml
+echo '  trusted:' >> ~/.yarnrc.yml
+echo '    npmAuthToken: "${GITHUB_NPM_TOKEN}"' >> ~/.yarnrc.yml
+echo '    npmRegistryServer: "https://npm.pkg.github.com"' >> ~/.yarnrc.yml
+echo '  fortawesome:' >> ~/.yarnrc.yml
+echo '    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"' >> ~/.yarnrc.yml
+echo '    npmRegistryServer: "https://npm.fontawesome.com/"' >> ~/.yarnrc.yml
 
-  echo "Production mode on. Setting yarn config for NPM registry."
-  echo 'npmScopes:' >> ~/.yarnrc.yml
-  echo '  trusted:' >> ~/.yarnrc.yml
-  echo '    npmAuthToken: "${GITHUB_NPM_TOKEN}"' >> ~/.yarnrc.yml
-  echo '    npmRegistryServer: "https://npm.pkg.github.com"' >> ~/.yarnrc.yml
-  echo '  fortawesome:' >> ~/.yarnrc.yml
-  echo '    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"' >> ~/.yarnrc.yml
-  echo '    npmRegistryServer: "https://npm.fontawesome.com/"' >> ~/.yarnrc.yml
-EOL
-else
-  echo "Development environment detected."
-  echo
-  echo "Please configure the registry as described in the URL below."
-  echo "https://github.com/trusted/trusted-ui/blob/main/README.md#registry-setup"
-  exit 1
-fi
+exit 0
