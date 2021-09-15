@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+
+echo "Trusted NPM Registry"
 exit 0
