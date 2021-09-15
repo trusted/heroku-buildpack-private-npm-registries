@@ -23,17 +23,15 @@ fi
 cd ${BUILD_DIR}
 
 # Assert existence of config vars.
+
 readonly ENV_DIR=$3
 
-echo "${ENV_DIR}"
-echo `ls -l ${ENV_DIR}`
-
-if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
+if [ ! -f ${ENV_DIR}/GITHUB_NPM_TOKEN ]; then
   echo "Failed! Variable \$GITHUB_NPM_TOKEN not set." | indent
   exit 1
 fi
 
-if [[ -z "$FONTAWESOME_NPM_TOKEN" ]]; then
+if [ ! -f ${ENV_DIR}/FONTAWESOME_NPM_TOKEN ]; then
   echo "Failed! Variable \$FONTAWESOME_NPM_TOKEN not set." | indent
   exit 1
 fi
