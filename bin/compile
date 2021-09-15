@@ -14,9 +14,6 @@ function indent() {
 echo 'Setting up private NPM registries.' | indent
 
 readonly BUILD_DIR=$1
-readonly ENV_DIR=$3
-
-echo "${ENV_DIR}"
 
 if [[ ! -n "${BUILD_DIR}" ]]; then
   echo "Failed! No build directory specified." | indent
@@ -26,6 +23,11 @@ fi
 cd ${BUILD_DIR}
 
 # Assert existence of config vars.
+readonly ENV_DIR=$3
+
+echo "${ENV_DIR}"
+echo `ls -l ${ENV_DIR}`
+
 if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
   echo "Failed! Variable \$GITHUB_NPM_TOKEN not set." | indent
   exit 1
