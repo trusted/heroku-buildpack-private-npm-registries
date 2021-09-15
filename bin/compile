@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+echo "Setting up Trusted NPM registry."
+
+readonly BUILD_DIR=$1
+readonly CLEAN_FILES=.slug-post-clean
+
+if [[ ! -n "${BUILD_DIR}" ]]; then
+  echo "No build directory specified - exiting"
+  exit 1
+fi
+
+cd ${BUILD_DIR}
+
+readonly registry_server=`yarn config get 'npmScopes["trusted"].npmRegistryServer'`
+readonly auth_token=`yarn config get 'npmScopes["trusted"].npmAuthToken'`
+
+if [[ "$auth_token" != "undefined" && "$registry_server" != "undefined" ]] ; then
+  echo "Registry already configured."
+  exit 0
+fi
+
+if [[ "$NODE_ENV" == "production" || -n "$CIRCLE_CI"  ]] ; then
+  if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
+    echo "Variable \$GITHUB_NPM_TOKEN not set. Aborting."
+    exit 1
+  fi
+
+  echo "Production mode on. Setting yarn config for NPM registry."
+  yarn config set npmScopes.trusted.npmRegistryServer 'https://npm.pkg.github.com'
+  yarn config set npmScopes.trusted.npmAuthToken '${GITHUB_NPM_TOKEN}'
+else
+  echo "Development environment detected."
+  echo
+  echo "Please configure the registry as described in the URL below."
+  echo "https://github.com/trusted/trusted-ui/blob/main/README.md#registry-setup"
+  exit 1
+fi
