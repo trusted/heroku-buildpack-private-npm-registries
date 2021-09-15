@@ -30,8 +30,14 @@ if [[ "$NODE_ENV" == "production" || -n "$CIRCLE_CI"  ]] ; then
   fi
 
   echo "Production mode on. Setting yarn config for NPM registry."
-  yarn config set npmScopes.trusted.npmRegistryServer 'https://npm.pkg.github.com'
-  yarn config set npmScopes.trusted.npmAuthToken '${GITHUB_NPM_TOKEN}'
+  echo 'npmScopes:' >> ~/.yarnrc.yml
+  echo '  trusted:' >> ~/.yarnrc.yml
+  echo '    npmAuthToken: "${GITHUB_NPM_TOKEN}"' >> ~/.yarnrc.yml
+  echo '    npmRegistryServer: "https://npm.pkg.github.com"' >> ~/.yarnrc.yml
+  echo '  fortawesome:' >> ~/.yarnrc.yml
+  echo '    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"' >> ~/.yarnrc.yml
+  echo '    npmRegistryServer: "https://npm.fontawesome.com/"' >> ~/.yarnrc.yml
+EOL
 else
   echo "Development environment detected."
   echo
