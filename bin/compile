@@ -15,14 +15,6 @@ fi
 
 cd ${BUILD_DIR}
 
-readonly registry_server=`yarn config get 'npmScopes["trusted"].npmRegistryServer'`
-readonly auth_token=`yarn config get 'npmScopes["trusted"].npmAuthToken'`
-
-if [[ "$auth_token" != "undefined" && "$registry_server" != "undefined" ]] ; then
-  echo "Registry already configured."
-  exit 0
-fi
-
 if [[ "$NODE_ENV" == "production" || -n "$CIRCLE_CI"  ]] ; then
   if [[ -z "$GITHUB_NPM_TOKEN" ]]; then
     echo "Variable \$GITHUB_NPM_TOKEN not set. Aborting."
