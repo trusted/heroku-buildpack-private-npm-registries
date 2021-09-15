@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-echo "Trusted NPM Registry"
+echo "Trusted Private NPM Registries"
 exit 0

@@ -14,6 +14,9 @@ function indent() {
 echo 'Setting up private NPM registries.' | indent
 
 readonly BUILD_DIR=$1
+readonly ENV_DIR=$3
+
+echo "${ENV_DIR}"
 
 if [[ ! -n "${BUILD_DIR}" ]]; then
   echo "Failed! No build directory specified." | indent
