@@ -39,10 +39,10 @@ fi
 cat >> .yarnrc.yml << EOL
 npmScopes:
   trusted:
-    npmAuthToken: "${GITHUB_NPM_TOKEN}"
+    npmAuthToken: "\${GITHUB_NPM_TOKEN}"
     npmRegistryServer: "https://npm.pkg.github.com"
   fortawesome:
-    npmAuthToken: "${FONTAWESOME_NPM_TOKEN}"
+    npmAuthToken: "\${FONTAWESOME_NPM_TOKEN}"
     npmRegistryServer: "https://npm.fontawesome.com/"
 EOL
 
